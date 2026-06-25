@@ -1,6 +1,9 @@
 import os
 import io
+from dotenv import load_dotenv
 import pandas as pd
+
+load_dotenv()
 import psycopg2
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
@@ -24,7 +27,7 @@ DB_CONFIG = {
 
 # Deixe vazio para exportar TODAS as tabelas do schema
 TABLES_TO_EXPORT = []
-SCHEMA = "public"
+SCHEMA = "sm"
 # ─────────────────────────────────────────────────────────────────────────────
 
 
