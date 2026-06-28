@@ -1,6 +1,14 @@
+# Credenciais — nunca commitar
 .env
 token.json
 credentials.json
+
+# Runtime — gerados localmente
+progress.txt
+inventario_backup.xlsx
+verificacao_drive.xlsx
+
+# Python
 __pycache__/
 *.pyc
 .venv/
