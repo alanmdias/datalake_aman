@@ -122,15 +122,23 @@ San Marino
 
 ```
 datalake_aman/
-├── CLAUDE.md                  # Este arquivo — contexto permanente
-├── backup.py                  # Script de extração e exportação (Etapa 1)
-├── requirements.txt           # Dependências Python
-├── .env.example               # Template de variáveis de ambiente
-├── .env                       # Credenciais locais (NÃO commitado)
-├── credentials.json           # OAuth2 Google (NÃO commitado)
-├── token.json                 # Token OAuth2 em cache (NÃO commitado)
-├── progress.txt               # Controle de progresso do backup (gerado em runtime)
-├── inventario_backup.xlsx     # Inventário das tabelas (gerado em runtime)
+├── CLAUDE.md                        # Este arquivo — contexto permanente
+├── BACKLOG.md                       # Backlog por etapa (To Do / Doing / Done)
+├── DECISIONS.md                     # Registro de decisões arquiteturais
+├── README.md                        # Visão geral do projeto
+├── requirements.txt                 # Dependências Python
+├── .env.example                     # Template de variáveis de ambiente
+├── .env                             # Credenciais locais (NÃO commitado)
+├── credentials.json                 # OAuth2 Google (NÃO commitado)
+├── token.json                       # Token OAuth2 em cache (NÃO commitado)
+├── progress.txt                     # Controle de progresso do backup (runtime)
+├── scripts/
+│   └── etapa1/
+│       ├── backup.py                        # Exportação principal para o Drive
+│       ├── etapa1_verificar.py              # Verifica alinhamento banco vs Drive
+│       ├── etapa1_reorganizar_drive.py      # Reorganiza pastas no Drive
+│       ├── etapa1_completar_tabelapreco.py  # Exportou parts faltantes (uso pontual)
+│       └── etapa1_data_catalog.py           # Gera data catalog (xlsx + md)
 └── docs/
     ├── 00_contexto_projeto.md
     ├── 01_escopo_contratado.md
@@ -138,7 +146,8 @@ datalake_aman/
     ├── 03_inventario_banco.md
     ├── 04_arquitetura_alvo.md
     ├── 05_proximos_passos.md
-    └── 06_decisoes_tecnicas.md
+    ├── data_catalog.md
+    └── relatorio_conclusao_etapa1.md
 ```
 
 ---
@@ -160,7 +169,7 @@ datalake_aman/
 ```powershell
 # 1. Garantir VPN conectada (host 192.168.16.11)
 cd C:\Users\Alan\datalake_aman
-python backup.py
+python scripts/etapa1/backup.py
 # Na primeira execução: autenticação OAuth2 abre no browser
 ```
 

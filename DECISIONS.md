@@ -144,3 +144,40 @@ Manter o projeto agnóstico de cloud provider até a Etapa 2, quando os requisit
 
 **Justificativa:**  
 A decisão de infraestrutura tem impacto de longo prazo e custo significativo. Tomá-la sem requisitos completos seria precipitado. A documentação e o código da Etapa 1 não assumem nenhum provider específico. A Etapa 2 iniciará com um processo formal de definição de requisitos antes de qualquer escolha.
+
+---
+
+## DEC-008 — Queries de metadados via pg_constraint em vez de information_schema
+
+**Data:** junho 2026  
+**Etapa:** 1  
+**Status:** Vigente
+
+**Contexto:**  
+O script `etapa1_data_catalog.py` inicialmente usava `information_schema.table_constraints` para extrair PKs e FKs. As queries retornavam zero resultados, mesmo com constraints presentes no banco.
+
+**Causa identificada:**  
+O usuário de acesso (`neto`) não tem visibilidade das constraints via `information_schema` neste banco PostgreSQL — comportamento possível por restrições de `search_path` ou permissões de schema. As mesmas constraints são visíveis via catálogos internos do PostgreSQL (`pg_constraint`, `pg_class`, `pg_attribute`).
+
+**Decisão:**  
+Substituir todas as queries de constraints por equivalentes via `pg_constraint` + `pg_attribute`.
+
+**Justificativa:**  
+Os catálogos `pg_*` são sempre acessíveis para qualquer usuário com acesso ao banco no PostgreSQL — são mais confiáveis que `information_schema` em ambientes com configurações não-padrão de permissões.
+
+---
+
+## DEC-009 — Reorganização dos scripts em scripts/etapa1/
+
+**Data:** junho 2026  
+**Etapa:** 1  
+**Status:** Vigente
+
+**Contexto:**  
+Com o crescimento do projeto, a raiz do repositório acumulou 5 scripts Python (`backup.py` e os 4 scripts `etapa1_*.py`), tornando a navegação confusa.
+
+**Decisão:**  
+Mover todos os scripts da Etapa 1 para `scripts/etapa1/`. Cada etapa futura terá seu próprio subdiretório em `scripts/`.
+
+**Justificativa:**  
+Separa claramente código de documentação. Facilita localizar scripts por etapa do projeto. Prepara a estrutura para as Etapas 2, 3 e 4 sem poluir a raiz.

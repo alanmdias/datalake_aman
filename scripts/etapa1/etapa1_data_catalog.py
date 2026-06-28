@@ -20,7 +20,8 @@ import pandas as pd
 from openpyxl.styles import PatternFill, Font, Alignment
 from openpyxl.utils import get_column_letter
 
-load_dotenv()
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+load_dotenv(os.path.join(ROOT, ".env"))
 warnings.filterwarnings("ignore")
 
 SCHEMA = "sm"
@@ -219,7 +220,7 @@ def main():
     df_columns = pd.DataFrame(col_rows)
 
     # ── Excel ──────────────────────────────────────────────────────────────────
-    output_xlsx = "data_catalog.xlsx"
+    output_xlsx = os.path.join(ROOT, "data_catalog.xlsx")
     print(f"Gerando {output_xlsx}...")
     with pd.ExcelWriter(output_xlsx, engine="openpyxl") as writer:
         df_summary.to_excel(writer, index=False, sheet_name="Resumo")
@@ -242,7 +243,7 @@ def main():
                 cell.fill = PatternFill(fill_type="solid", fgColor=color)
 
     # ── Markdown ───────────────────────────────────────────────────────────────
-    output_md = "docs/data_catalog.md"
+    output_md = os.path.join(ROOT, "docs", "data_catalog.md")
     print(f"Gerando {output_md}...")
 
     md_lines = [

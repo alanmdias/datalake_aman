@@ -18,20 +18,27 @@ O projeto tem como objetivo criar a primeira arquitetura de dados proprietária 
 
 ```
 datalake_aman/
-├── backup.py              # Etapa 1 — extração e exportação para Google Drive
-├── requirements.txt       # Dependências Python
-├── .env.example           # Template de variáveis de ambiente
-├── CLAUDE.md              # Contexto permanente para sessões do Claude Code
-├── BACKLOG.md             # Backlog do projeto (To Do / Doing / Done)
-├── DECISIONS.md           # Registro de decisões arquiteturais
-└── docs/
-    ├── 00_contexto_projeto.md
-    ├── 01_escopo_contratado.md
-    ├── 02_status_atual.md
-    ├── 03_inventario_banco.md
-    ├── 04_arquitetura_alvo.md
-    ├── 05_proximos_passos.md
-    └── 06_decisoes_tecnicas.md
+├── scripts/
+│   └── etapa1/
+│       ├── backup.py                        # Exportação de todas as tabelas para o Drive
+│       ├── etapa1_verificar.py              # Verifica alinhamento banco vs Drive
+│       ├── etapa1_reorganizar_drive.py      # Reorganiza arquivos em subpastas no Drive
+│       ├── etapa1_completar_tabelapreco.py  # Exportou parts faltantes (uso pontual)
+│       └── etapa1_data_catalog.py           # Gera data_catalog.xlsx e docs/data_catalog.md
+├── docs/
+│   ├── 00_contexto_projeto.md
+│   ├── 01_escopo_contratado.md
+│   ├── 02_status_atual.md
+│   ├── 03_inventario_banco.md
+│   ├── 04_arquitetura_alvo.md
+│   ├── 05_proximos_passos.md
+│   ├── data_catalog.md
+│   └── relatorio_conclusao_etapa1.md
+├── requirements.txt
+├── .env.example
+├── CLAUDE.md
+├── BACKLOG.md
+└── DECISIONS.md
 ```
 
 ---
@@ -99,7 +106,7 @@ Coloque o `credentials.json` (OAuth2 do Google Cloud) na raiz do projeto.
 
 ```powershell
 cd datalake_aman
-python backup.py
+python scripts/etapa1/backup.py
 ```
 
 Na primeira execução, um browser abrirá para autenticação OAuth2. O token é salvo em `token.json` para execuções futuras.

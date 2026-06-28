@@ -7,6 +7,7 @@ credentials.json
 progress.txt
 inventario_backup.xlsx
 verificacao_drive.xlsx
+data_catalog.xlsx
 
 # Python
 __pycache__/

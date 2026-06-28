@@ -16,11 +16,12 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
-load_dotenv()
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+load_dotenv(os.path.join(ROOT, ".env"))
 
 GDRIVE_ROOT_ID = "0AEEhSxpe_XHHUk9PVA"
 SCOPES = ["https://www.googleapis.com/auth/drive"]
-TOKEN_FILE = "token.json"
+TOKEN_FILE = os.path.join(ROOT, "token.json")
 SCHEMA = "sm"
 EXCEL_ROW_LIMIT = 900_000
 CSV_CHUNK_SIZE = 1_000_000
