@@ -61,35 +61,32 @@ ORDER BY c.table_name, c.ordinal_position;
 
 QUERY_PKS = """
 SELECT
-    kcu.table_name,
-    string_agg(kcu.column_name, ', ' ORDER BY kcu.ordinal_position) AS chave_primaria
-FROM information_schema.table_constraints tc
-JOIN information_schema.key_column_usage kcu
-    ON tc.constraint_name = kcu.constraint_name
-    AND tc.table_schema   = kcu.table_schema
-WHERE tc.table_schema    = %s
-  AND tc.constraint_type = 'PRIMARY KEY'
-GROUP BY kcu.table_name;
+    t.relname AS table_name,
+    string_agg(a.attname, ', ' ORDER BY array_position(c.conkey, a.attnum)) AS chave_primaria
+FROM pg_class t
+JOIN pg_namespace n ON n.oid = t.relnamespace
+JOIN pg_constraint c ON c.conrelid = t.oid AND c.contype = 'p'
+JOIN pg_attribute a ON a.attrelid = t.oid AND a.attnum = ANY(c.conkey)
+WHERE n.nspname = %s
+GROUP BY t.relname;
 """
 
 QUERY_FKS = """
 SELECT
-    tc.table_name,
+    t.relname AS table_name,
     COUNT(*) AS num_fks,
     string_agg(
-        kcu.column_name || ' -> ' || ccu.table_name || '.' || ccu.column_name,
-        ' | ' ORDER BY kcu.column_name
+        a.attname || ' -> ' || tf.relname || '.' || af.attname,
+        ' | ' ORDER BY a.attname
     ) AS fks_detalhe
-FROM information_schema.table_constraints tc
-JOIN information_schema.key_column_usage kcu
-    ON tc.constraint_name = kcu.constraint_name
-    AND tc.table_schema   = kcu.table_schema
-JOIN information_schema.constraint_column_usage ccu
-    ON ccu.constraint_name = tc.constraint_name
-    AND ccu.table_schema   = tc.table_schema
-WHERE tc.table_schema    = %s
-  AND tc.constraint_type = 'FOREIGN KEY'
-GROUP BY tc.table_name;
+FROM pg_class t
+JOIN pg_namespace n  ON n.oid = t.relnamespace
+JOIN pg_constraint c ON c.conrelid = t.oid AND c.contype = 'f'
+JOIN pg_attribute a  ON a.attrelid = t.oid  AND a.attnum = c.conkey[1]
+JOIN pg_class tf     ON tf.oid = c.confrelid
+JOIN pg_attribute af ON af.attrelid = tf.oid AND af.attnum = c.confkey[1]
+WHERE n.nspname = %s
+GROUP BY t.relname;
 """
 
 # Colunas candidatas a "última atualização"
